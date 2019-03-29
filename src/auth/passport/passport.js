@@ -1,8 +1,6 @@
 const { ExtractJwt, Strategy } = require('passport-jwt');
 const LocalStrategy = require('passport-local');
-const {
-  models: { User },
-} = require('../../model');
+const { User } = require('../../model');
 const {
   cryptoUtils: { compare },
 } = require('../utils');

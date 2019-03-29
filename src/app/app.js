@@ -7,6 +7,7 @@ const compression = require('compression');
 const passport = require('passport');
 const auth = require('../auth');
 const error = require('../error');
+const smtpTransport = require('../email');
 
 module.exports = (options = {}) => {
   const app = express();
@@ -44,6 +45,11 @@ module.exports = (options = {}) => {
     app.use(passport.initialize());
     auth.passport(passport);
     app.passport = passport;
+  }
+
+  // Initialize email
+  if (options.email) {
+    app.smtpTransport = smtpTransport();
   }
 
   // Error handler
