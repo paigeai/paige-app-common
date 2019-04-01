@@ -5,6 +5,7 @@ const parser = require('body-parser');
 const logger = require('morgan');
 const compression = require('compression');
 const passport = require('passport');
+const os = require('os');
 const auth = require('../auth');
 const error = require('../error');
 const smtpTransport = require('../email');
@@ -34,7 +35,31 @@ module.exports = (options = {}) => {
   );
 
   // Inject routes
-  app.get('/healthz', (req, res) => res.send('ok'));
+
+  app.get('/healthz', (req, res) => {
+    res.sendStatus(200);
+  });
+
+  app.get('/status', (req, res) => {
+    if (req.query.info) {
+      res.send({
+        status: 'up',
+        node: {
+          version: process.version,
+          memoryUsage: Math.round(process.memoryUsage().rss / 1024 / 1024) + 'M',
+          uptime: process.uptime(),
+        },
+        system: {
+          loadavg: os.loadavg(),
+          freeMemory: Math.round(os.freemem() / 1024 / 1024) + 'M',
+        },
+        env: process.env.NODE_ENV,
+        hostname: os.hostname(),
+      });
+    } else {
+      res.send({ status: 'up' });
+    }
+  });
 
   if (options.router) {
     app.use(options.router);
