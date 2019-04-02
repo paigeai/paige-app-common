@@ -36,11 +36,18 @@ module.exports = (options = {}) => {
 
   // Inject routes
 
-  app.get('/healthz', (req, res) => {
+  const {
+    roleUtils: { ROLES },
+  } = auth;
+  const {
+    middleware: { hasAuthority },
+  } = auth;
+
+  app.get('/healthz', hasAuthority(ROLES.admin), (req, res) => {
     res.sendStatus(200);
   });
 
-  app.get('/status', (req, res) => {
+  app.get('/status', hasAuthority(ROLES.admin), (req, res) => {
     if (req.query.info) {
       res.send({
         status: 'up',
