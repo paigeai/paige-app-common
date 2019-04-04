@@ -4,8 +4,6 @@ const middleware = require('./middleware');
 const error = require('./error');
 const auth = require('./auth');
 const db = require('./db');
-const redis = require('./redis');
-const socket = require('./socket');
 const model = require('./model');
 const logger = require('./logger');
 const email = require('./email');
@@ -18,8 +16,6 @@ module.exports = {
   error,
   auth,
   db,
-  redis,
-  socket,
   model,
   logger,
   email,

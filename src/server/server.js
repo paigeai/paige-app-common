@@ -8,12 +8,11 @@ const { PORT } = process.env;
 
 const start = async options => {
   const { port } = process.env;
-  const { app, beforeStart, afterStart } = options;
 
-  const server = http.createServer(app);
+  const server = http.createServer(options.app);
 
-  if (beforeStart) {
-    await Promise.resolve(beforeStart(server));
+  if (options.beforeStart) {
+    await Promise.resolve(options.beforeStart(server));
   }
 
   server.listen(port, async () => {
@@ -27,20 +26,18 @@ const start = async options => {
 
     logger.info(`Server listening on ${port}`);
 
-    if (afterStart) {
-      await Promise.resolve(afterStart(server));
+    if (options.afterStart) {
+      await Promise.resolve(options.afterStart(server));
     }
   });
 };
 
 const stop = async options => {
-  const { beforeStop } = options;
-
   try {
     logger.info('Stopping server gracefully');
 
-    if (beforeStop) {
-      await Promise.resolve(beforeStop());
+    if (options.beforeStop) {
+      await Promise.resolve(options.beforeStop());
     }
 
     process.exit(0);
@@ -52,6 +49,17 @@ const stop = async options => {
 };
 
 const init = options => {
+  options = Object.assign(
+    {
+      sharePort: true,
+      beforeStart: null,
+      afterStart: null,
+      beforeStop: null,
+      app: null,
+    },
+    options,
+  );
+
   const pidToPort = {};
 
   if (cluster.isMaster) {
@@ -62,9 +70,11 @@ const init = options => {
         logger.error(`Worker has died: ${worker.process.pid}`);
         logger.info('Spawning new worker');
 
+        //
         // Get the port that is now missing and create new worker
         // with that port. Also, delete old pidToPort mapping and
         // add the new one.
+        //
         const port = pidToPort[worker.process.pid];
         delete pidToPort[worker.process.pid];
 
@@ -78,7 +88,8 @@ const init = options => {
     });
 
     for (let i = 0; i < os.cpus().length; ++i) {
-      const port = Number.parseInt(PORT, 10) + i;
+      const portAdd = options.sharePort ? 0 : i;
+      const port = Number.parseInt(PORT, 10) + portAdd;
       const worker = cluster.fork({ port });
       pidToPort[worker.process.pid] = port;
     }
