@@ -3,6 +3,7 @@ const requireAuth = require('./require-auth');
 const hasAuthority = require('./has-authority');
 const isAdmin = require('./is-admin');
 const optionalAuth = require('./optional-auth');
+const errorHandler = require('./global-error-handler');
 
 module.exports = {
   requireLogin,
@@ -10,4 +11,5 @@ module.exports = {
   hasAuthority,
   isAdmin,
   optionalAuth,
+  errorHandler,
 };

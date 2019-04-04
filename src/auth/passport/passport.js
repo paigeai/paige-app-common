@@ -1,9 +1,7 @@
 const { ExtractJwt, Strategy } = require('passport-jwt');
 const LocalStrategy = require('passport-local');
 const { User } = require('../../model');
-const {
-  cryptoUtils: { compare },
-} = require('../utils');
+const { compare } = require('../crypto');
 
 const { APP_SECRET } = process.env;
 

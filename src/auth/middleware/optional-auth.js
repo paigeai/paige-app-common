@@ -1,4 +1,4 @@
-const optionalAuth = (req, res, next) => {
+module.exports = (req, res, next) => {
   req.app.passport.authenticate('jwt', (err, user) => {
     if (err) {
       return next(err);
@@ -9,5 +9,3 @@ const optionalAuth = (req, res, next) => {
     next();
   })(req, res, next);
 };
-
-module.exports = optionalAuth;

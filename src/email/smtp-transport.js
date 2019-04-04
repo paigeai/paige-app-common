@@ -5,7 +5,7 @@ const path = require('path');
 
 const { MAILGUN_ACTIVE_API_KEY, MAILGUN_DOMAIN } = process.env;
 
-const createTransport = () => {
+module.exports = () => {
   const mailgunOptions = {
     auth: {
       api_key: MAILGUN_ACTIVE_API_KEY,
@@ -25,5 +25,3 @@ const createTransport = () => {
 
   return transport;
 };
-
-module.exports = createTransport;

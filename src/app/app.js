@@ -9,6 +9,7 @@ const passport = require('passport');
 const auth = require('../auth');
 const error = require('../error');
 const smtpTransport = require('../email');
+const { errorHandler } = require('../middleware');
 
 /**
  * Create and return express app instance.
@@ -141,7 +142,7 @@ module.exports = options => {
   //
   // Use global error handler.
   //
-  error.middleware(app);
+  app.use(errorHandler);
 
   return app;
 };

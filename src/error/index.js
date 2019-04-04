@@ -1,7 +1,3 @@
-const errors = require('./errors');
-const middleware = require('./middleware');
+const errors = require('./app-error');
 
-module.exports = {
-  errors,
-  middleware,
-};
+module.exports = errors;

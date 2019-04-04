@@ -1,6 +1,4 @@
-const {
-  errors: { BadRequestError },
-} = require('../error');
+const { BadRequestError } = require('../error');
 
 module.exports = config => (req, res, next) => {
   try {

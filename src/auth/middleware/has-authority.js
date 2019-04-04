@@ -1,9 +1,5 @@
-const {
-  errors: { UnauthorizedError },
-} = require('../../error');
-const {
-  roleUtils: { hasAuthority },
-} = require('../utils');
+const { UnauthorizedError } = require('../../error');
+const { hasAuthority } = require('../role');
 const requireAuth = require('./require-auth');
 
 module.exports = role => [

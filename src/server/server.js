@@ -48,7 +48,7 @@ const stop = async options => {
   }
 };
 
-const init = options => {
+module.exports = options => {
   options = Object.assign(
     {
       sharePort: true,
@@ -97,5 +97,3 @@ const init = options => {
     start(options);
   }
 };
-
-module.exports = init;
