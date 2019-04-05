@@ -1,6 +1,6 @@
 {
   "name": "paige-app-common",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "main": "src/index.js",
   "engines": {
     "node": ">=9.0.0"
