@@ -11,7 +11,7 @@ module.exports = (err, req, res, next) => {
     err = e;
   }
 
-  const response = err.json ? err.json() : { message: err.message };
+  const response = err.json ? err.json() : err.message;
   const responseCode = err.code || 500;
 
   res.status(responseCode).send(response);
