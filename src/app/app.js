@@ -74,24 +74,17 @@ module.exports = options => {
     auth.passport(passport);
     app.passport = passport;
 
-    const {
-      role: { ROLES },
-    } = auth;
-    const {
-      middleware: { hasAuthority },
-    } = auth;
-
     //
     // Setup heartbeat route.
     //
-    app.get('/healthz', hasAuthority(ROLES.admin), (req, res) => {
+    app.get('/healthz', (req, res) => {
       res.sendStatus(200);
     });
 
     //
     // Setup server status route.
     //
-    app.get('/status', hasAuthority(ROLES.admin), (req, res) => {
+    app.get('/status', (req, res) => {
       if (req.query.info) {
         res.send({
           status: 'up',
