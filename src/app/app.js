@@ -75,9 +75,7 @@ module.exports = options => {
     app.passport = passport;
 
     const {
-      auth: {
-        role: { ROLES },
-      },
+      role: { ROLES },
     } = auth;
     const {
       middleware: { hasAuthority },
