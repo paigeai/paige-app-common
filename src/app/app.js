@@ -7,7 +7,6 @@ const logger = require('morgan');
 const compression = require('compression');
 const passport = require('passport');
 const auth = require('../auth');
-const error = require('../error');
 const smtpTransport = require('../email');
 const { errorHandler } = require('../middleware');
 
