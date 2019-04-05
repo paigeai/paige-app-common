@@ -1,12 +1,14 @@
-const { UnauthorizedError } = require('../../error');
-const { hasAuthority } = require('../role');
+const {
+  role: { hasAuthority, ROLES },
+} = require('../auth');
+const { UnauthorizedError } = require('../error');
 const requireAuth = require('./require-auth');
 
-module.exports = role => [
+module.exports = [
   requireAuth,
   (req, res, next) => {
     try {
-      if (!hasAuthority(req.user, role)) {
+      if (!hasAuthority(req.user, ROLES.admin)) {
         throw new UnauthorizedError();
       }
 

@@ -1,4 +1,4 @@
-const { UnauthorizedError } = require('../../error');
+const { UnauthorizedError } = require('../error');
 
 module.exports = (req, res, next) => {
   req.app.passport.authenticate('local', (err, user) => {
