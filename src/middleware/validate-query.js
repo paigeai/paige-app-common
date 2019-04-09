@@ -8,11 +8,10 @@ module.exports = config => (req, res, next) => {
     for (let i = 0; i < params.length; ++i) {
       const paramName = params[i];
       const paramConfig = config[paramName];
-      const paramValue = req.query[paramName];
+      let paramValue = req.query[paramName];
 
-      // check if param is missing and required
-      if (paramValue === undefined && paramConfig.defaultValue) {
-        req.query[paramName] = paramConfig.defaultValue;
+      if (paramValue === undefined && paramConfig.defaultValue !== undefined) {
+        paramValue = paramConfig.defaultValue;
       } else if (paramValue === undefined && paramConfig.required === true) {
         errors.push(`query parameter '${paramName}' is required`);
         continue;
