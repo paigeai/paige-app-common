@@ -2,8 +2,6 @@ const express = require('express');
 const helmet = require('helmet');
 const parser = require('body-parser');
 const compression = require('compression');
-const passport = require('passport');
-const authenticate = require('./authenticate');
 
 /**
  * Create and return express app instance.
@@ -11,14 +9,12 @@ const authenticate = require('./authenticate');
  * @param {Object} options Configuration options
  * @param {Object} options.extensions Optional modules to add to app instance
  * @param {express.Router} router Additional routes to inject into app
- * @param {Boolean} auth Add authentication capabilities to app
  */
 module.exports = options => {
   options = Object.assign(
     {
       extensions: null,
       router: null,
-      auth: false,
     },
     options,
   );
@@ -55,15 +51,6 @@ module.exports = options => {
   app.get('/healthz', (req, res) => {
     res.sendStatus(200);
   });
-
-  //
-  // Optionally initialize passport and protected routes.
-  //
-  if (options.auth) {
-    app.use(passport.initialize());
-    authenticate(passport);
-    app.passport = passport;
-  }
 
   //
   // Optionally inject routes.

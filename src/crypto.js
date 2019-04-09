@@ -1,6 +1,42 @@
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
 
+const { APP_SECRET } = process.env;
 const ROUNDS = 10;
+
+/**
+ * Generate auth token.
+ *
+ * @param {Object} user - User object
+ */
+const authToken = user => {
+  const token = jwt.sign(
+    {
+      id: user.id,
+      username: user.username,
+    },
+    APP_SECRET,
+  );
+
+  return `JWT ${token}`;
+};
+
+/**
+ * Generate a random token for resetting account information.
+ *
+ * @param {int} length - Token length
+ */
+const resetToken = (length = 32) =>
+  new Promise((resolve, reject) => {
+    crypto.randomBytes(Math.ceil(length / 2), (err, buf) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(buf.toString('hex'));
+      }
+    });
+  });
 
 /**
  * Hash and salt password using bcrypt (async)
@@ -36,6 +72,8 @@ const compare = (candidate, password) =>
   });
 
 module.exports = {
+  authToken,
+  resetToken,
   encrypt,
   encryptSync,
   compare,

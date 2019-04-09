@@ -1,45 +1,39 @@
+const jwt = require('jsonwebtoken');
 const { BadRequestError, UnauthorizedError } = require('./errors');
 
-const optionalAuth = (req, res, next) => {
-  req.app.passport.authenticate('jwt', (err, user) => {
-    if (err) {
-      return next(err);
-    }
+const { APP_SECRET } = process.env;
 
-    req.authenticated = !!user;
-    req.user = user;
+const optionalAuth = (req, res, next) => {
+  const token = req.headers.Authorization;
+
+  if (!token) {
     next();
-  })(req, res, next);
+  } else {
+    jwt.verify(token, APP_SECRET, (err, decoded) => {
+      if (decoded) {
+        req.user = decoded;
+      }
+
+      next();
+    });
+  }
 };
 
 const requireAuth = (req, res, next) => {
-  req.app.passport.authenticate('jwt', (err, user) => {
-    if (err) {
-      return next(err);
-    }
+  const token = req.headers.Authorization;
 
-    if (!user) {
+  if (!token) {
+    throw new UnauthorizedError();
+  }
+
+  jwt.verify(token, APP_SECRET, (err, decoded) => {
+    if (decoded) {
+      req.user = decoded;
+      next();
+    } else {
       throw new UnauthorizedError();
     }
-
-    req.user = user;
-    next();
-  })(req, res, next);
-};
-
-const requireLogin = (req, res, next) => {
-  req.app.passport.authenticate('local', (err, user) => {
-    if (err) {
-      return next(err);
-    }
-
-    if (!user) {
-      throw new UnauthorizedError();
-    }
-
-    req.user = user;
-    next();
-  })(req, res, next);
+  });
 };
 
 const validateRequest = config => (req, res, next) => {
@@ -80,6 +74,5 @@ const validateRequest = config => (req, res, next) => {
 module.exports = {
   optionalAuth,
   requireAuth,
-  requireLogin,
   validateRequest,
 };
