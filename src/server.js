@@ -2,9 +2,13 @@
 const http = require('http');
 const os = require('os');
 const cluster = require('cluster');
-const logger = require('../logger');
+const logger = require('./logger');
 
 const { PORT } = process.env;
+
+if (!PORT) {
+  throw new Error('environment variable PORT must be set');
+}
 
 const start = async options => {
   const { port } = process.env;
@@ -87,9 +91,11 @@ module.exports = options => {
       logger.info(`Forked new worker with pid ${worker.process.pid}`);
     });
 
+    const basePort = Number.parseInt(PORT, 10);
+
     for (let i = 0; i < os.cpus().length; ++i) {
       const portAdd = options.sharePort ? 0 : i;
-      const port = Number.parseInt(PORT, 10) + portAdd;
+      const port = basePort + portAdd;
       const worker = cluster.fork({ port });
       pidToPort[worker.process.pid] = port;
     }

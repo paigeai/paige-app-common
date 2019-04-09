@@ -1,14 +1,9 @@
-const os = require('os');
 const express = require('express');
-const cors = require('cors');
 const helmet = require('helmet');
 const parser = require('body-parser');
-const logger = require('morgan');
 const compression = require('compression');
 const passport = require('passport');
-const auth = require('../auth');
-const smtpTransport = require('../email');
-const { errorHandler } = require('../middleware');
+const authenticate = require('./authenticate');
 
 /**
  * Create and return express app instance.
@@ -16,7 +11,6 @@ const { errorHandler } = require('../middleware');
  * @param {Object} options Configuration options
  * @param {Object} options.extensions Optional modules to add to app instance
  * @param {express.Router} router Additional routes to inject into app
- * @param {Boolean} email Add email capabilities to app
  * @param {Boolean} auth Add authentication capabilities to app
  */
 module.exports = options => {
@@ -24,7 +18,6 @@ module.exports = options => {
     {
       extensions: null,
       router: null,
-      email: false,
       auth: false,
     },
     options,
@@ -36,11 +29,6 @@ module.exports = options => {
   const app = express();
 
   //
-  // @TODO: Restrict in production.
-  //
-  app.use(cors());
-
-  //
   // Set security headers.
   //
   app.use(helmet());
@@ -49,11 +37,6 @@ module.exports = options => {
   // Compress responses.
   //
   app.use(compression());
-
-  //
-  // Log requests.
-  //
-  app.use(logger('dev'));
 
   //
   // Parse incoming requests.
@@ -78,7 +61,7 @@ module.exports = options => {
   //
   if (options.auth) {
     app.use(passport.initialize());
-    auth.passport(passport);
+    authenticate(passport);
     app.passport = passport;
   }
 
@@ -87,13 +70,6 @@ module.exports = options => {
   //
   if (options.router) {
     app.use(options.router);
-  }
-
-  //
-  // Optionally initialize email.
-  //
-  if (options.email) {
-    app.smtpTransport = smtpTransport();
   }
 
   //
@@ -108,7 +84,16 @@ module.exports = options => {
   //
   // Use global error handler.
   //
-  app.use(errorHandler);
+  app.use((err, req, res, next) => {
+    if (res.headersSent) {
+      return;
+    }
+
+    const responseBody = err.json ? err.json() : err.message;
+    const responseCode = err.code || 500;
+
+    res.status(responseCode).send(responseBody);
+  });
 
   return app;
 };

@@ -1,9 +1,13 @@
 const { ExtractJwt, Strategy } = require('passport-jwt');
 const LocalStrategy = require('passport-local');
-const { User } = require('../../model');
-const { compare } = require('../crypto');
+const User = require('./model-user');
+const { compare } = require('./crypto');
 
 const { APP_SECRET } = process.env;
+
+if (!APP_SECRET) {
+  throw new Error('environment variable APP_SECRET must be set');
+}
 
 module.exports = passport => {
   // Define jwt authentication options

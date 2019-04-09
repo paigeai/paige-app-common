@@ -1,6 +1,6 @@
 const Knex = require('knex');
 const { Model } = require('objection');
-const knexConfig = require('./knexfile');
+const knexConfig = require('./db-config');
 
 module.exports = options => {
   options = Object.assign(

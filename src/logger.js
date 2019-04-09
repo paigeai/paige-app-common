@@ -6,6 +6,10 @@ const {
 
 const { LOG_LEVEL = 'debug', APP_NAME } = process.env;
 
+if (!APP_NAME) {
+  throw new Error('environment variable APP_NAME must be set');
+}
+
 const logger = createLogger({
   format: combine(timestamp(), json()),
   transports: [

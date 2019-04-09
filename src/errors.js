@@ -1,4 +1,20 @@
-const BaseError = require('./base-error');
+class BaseError extends Error {
+  constructor(message = 'Something went wrong') {
+    super(message);
+    this.name = this.constructor.name;
+    Error.captureStackTrace(this, this.constructor);
+  }
+
+  json() {
+    return {
+      type: this.type,
+      code: this.code,
+      message: this.message,
+      errors: this.errors,
+      fields: this.fields,
+    };
+  }
+}
 
 class UniqueViolationError extends BaseError {
   constructor(message = 'Unique constraint violation', fields) {

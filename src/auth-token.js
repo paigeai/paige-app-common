@@ -2,6 +2,10 @@ const jwt = require('jsonwebtoken');
 
 const { APP_SECRET } = process.env;
 
+if (!APP_SECRET) {
+  throw new Error('environment variable APP_SECRET must be set');
+}
+
 /**
  * Generate auth token.
  *
