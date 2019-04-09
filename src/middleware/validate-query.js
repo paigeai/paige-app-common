@@ -83,10 +83,7 @@ module.exports = config => (req, res, next) => {
     }
 
     if (errors.length > 0) {
-      throw new BadRequestError({
-        message: 'Invalid query parameters',
-        errors,
-      });
+      throw new BadRequestError('Invalid query parameters', errors);
     }
 
     next();
