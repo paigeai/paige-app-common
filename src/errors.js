@@ -8,7 +8,6 @@ class BaseError extends Error {
   json() {
     return {
       type: this.type,
-      code: this.code,
       message: this.message,
       errors: this.errors,
       fields: this.fields,
@@ -19,8 +18,8 @@ class BaseError extends Error {
 class UniqueViolationError extends BaseError {
   constructor(message = 'Unique constraint violation', fields) {
     super(message);
-    this.type = 'UniqueViolationError';
-    this.code = 409;
+    this.type = 'UniqueConstraintViolation';
+    this.responseCode = 409;
     this.fields = fields;
   }
 }
@@ -28,24 +27,24 @@ class UniqueViolationError extends BaseError {
 class NotFoundError extends BaseError {
   constructor(message = 'Not found') {
     super(message);
-    this.type = 'NotFoundError';
-    this.code = 404;
+    this.type = 'NotFound';
+    this.responseCode = 404;
   }
 }
 
 class UnauthorizedError extends BaseError {
   constructor(message = 'Unauthorized') {
     super(message);
-    this.type = 'UnauthorizedError';
-    this.code = 401;
+    this.type = 'Unauthorized';
+    this.responseCode = 401;
   }
 }
 
 class BadRequestError extends BaseError {
   constructor(message = 'Bad request', errors) {
     super(message, 400);
-    this.type = 'BadRequestError';
-    this.code = 400;
+    this.type = 'BadRequest';
+    this.responseCode = 400;
     this.errors = errors;
   }
 }

@@ -76,8 +76,8 @@ module.exports = options => {
       return;
     }
 
-    const responseBody = err.json ? err.json() : err.message;
-    const responseCode = err.code || 500;
+    const responseBody = typeof err.json === 'function' ? err.json() : err.message;
+    const responseCode = err.responseCode || 500;
 
     res.status(responseCode).send(responseBody);
   });
