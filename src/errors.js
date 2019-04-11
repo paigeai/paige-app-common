@@ -16,8 +16,8 @@ class BaseError extends Error {
 }
 
 class UniqueViolationError extends BaseError {
-  constructor(message = 'Unique constraint violation', fields) {
-    super(message);
+  constructor(fields) {
+    super('Unique constraint violation');
     this.type = 'UniqueConstraintViolation';
     this.responseCode = 409;
     this.fields = fields;
@@ -25,24 +25,24 @@ class UniqueViolationError extends BaseError {
 }
 
 class NotFoundError extends BaseError {
-  constructor(message = 'Not found') {
-    super(message);
+  constructor() {
+    super('Not found');
     this.type = 'NotFound';
     this.responseCode = 404;
   }
 }
 
 class UnauthorizedError extends BaseError {
-  constructor(message = 'Unauthorized') {
-    super(message);
+  constructor() {
+    super('Unauthorized');
     this.type = 'Unauthorized';
     this.responseCode = 401;
   }
 }
 
 class BadRequestError extends BaseError {
-  constructor(message = 'Bad request', errors) {
-    super(message, 400);
+  constructor(message, errors) {
+    super('Bad request');
     this.type = 'BadRequest';
     this.responseCode = 400;
     this.errors = errors;
